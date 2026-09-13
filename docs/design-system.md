@@ -363,10 +363,34 @@ No solo mobile/tablet/desktop — pensados por composición visual (regla del CL
 
 ---
 
-## Pendiente de tu revisión
+## Bugs conocidos (pendientes de corregir)
 
-Antes de pasar a la Etapa 2 (setup técnico), confirmame si:
-1. La paleta día/noche por sección te cierra, o preferís que **todo** el sitio sea de un
-   solo modo (sin alternar día/noche entre secciones).
-2. El uso de Great Vibes limitado solo a "Abi" + 1 acento por sección te parece bien, o
-   querés más presencia del script en otros títulos.
+### Photobook: el scroll queda clavado en la última foto
+
+**Reportado:** el book de fotos (5 fotos) solo muestra la quinta (última) y no se mueve
+de ahí — se pierde el efecto crossfade "tipo video" al scrollear.
+
+**Estado:** anotado para corregir en una próxima sesión. NO resuelto todavía.
+
+**Dónde mirar:** `src/sections/photobook/index.ts` (lógica de pin/crossfade) y
+`src/animations/lenisSetup.ts` (`wheelMultiplier`/`touchMultiplier`).
+
+**Hipótesis de diagnóstico (a verificar, no confirmada):**
+- El pin del photobook depende de que `ScrollTrigger.refresh()` + `lenis.resize()` se
+  ejecuten **después** de que `experience` deje `display:none` (ver `unlockExperience()`
+  en `src/main.ts`). Si el refresh ocurre antes de que el layout esté realmente asentado
+  (imágenes sin cargar aún → `offsetHeight` distinto), el `end` del ScrollTrigger
+  (`+=${steps * 160}%`) puede calcularse mal y dejar todo el recorrido de scroll
+  comprimido en muy poco espacio real — lo que en la práctica se siente como "salta
+  directo a la última foto y ahí se traba".
+- Puede solaparse con el bug ya conocido de "pin-skip" (ver sección de errores/fixes de
+  la sesión anterior): si el contenedor mide menos alto de lo esperado, el `end` del
+  trigger cae muy cerca del `start`, y cualquier scroll —por mínimo que sea— ya cae fuera
+  del rango pineado, mostrando siempre el último frame.
+- Revisar también si las imágenes `book-0N.jpg` tienen `width`/`height` explícitos o un
+  `aspect-ratio` reservado — si no, el layout shift al cargarlas tardíamente podría estar
+  invalidando las mediciones que ScrollTrigger tomó en el refresh inicial.
+
+**Siguiente paso sugerido:** reproducir con Playwright (igual que los bugs anteriores),
+loggeando `ScrollTrigger.getById(...).start/end` reales tras el `refresh()`, y comparar
+contra el alto real de `section` en ese momento.
