@@ -1,0 +1,78 @@
+/*
+  Design tokens — ver docs/design-system.md (revisión post Etapa 6b, paleta
+  Tangled tomada de la imagen de referencia del cliente: verde salvia,
+  violeta intenso, lila pastel, durazno y marrón chocolate).
+
+  Cambio importante respecto a versiones anteriores: SE ELIMINÓ el sistema
+  día/noche (`[data-scene="night"]`). El cliente pidió explícitamente "que
+  no sea de noche, vamos todo a light" — todas las secciones son claras
+  ahora; la variedad visual entre secciones viene de qué tono pastel de la
+  paleta usa cada una como fondo (`data-bg`), no de alternar claro/oscuro.
+*/
+
+:root {
+  /* ---- color ---- */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #ede0f7;
+  --color-foreground: #3b2417;
+  --color-muted-foreground: #6b5847;
+  --color-primary: #5b3a9e;
+  --color-primary-hover: #4a2f82;
+  --color-secondary: #c9a8e8;
+  /* #C96F3E (el durazno "puro" de la imagen) solo da 3.6:1 con texto blanco
+     — por debajo de AA. Se usa la versión más oscura como accent real; el
+     tono claro queda disponible como --color-bg-peach para fondos, no texto. */
+  --color-accent: #a85a30;
+  --color-accent-hover: #8f4b27;
+  --color-on-accent: #ffffff;
+  --color-border: #e4d9fa;
+  --color-success: #2f6b4f;
+  --color-error: #b91c1c;
+
+  /* Tonos de fondo pastel de la paleta — usados vía data-bg en cada
+     sección para variar el fondo sin salir de light-mode ni tocar el
+     contraste de texto (todos son casi blancos, con matiz). */
+  --color-bg-sage: #e8f0e0;
+  --color-bg-lilac: #ede0f7;
+  --color-bg-peach: #fbe6d8;
+
+  /* Verde/marrón de la paleta, disponibles como acentos decorativos
+     (ilustración, detalles), no como texto/botón por defecto. */
+  --color-nature: #6b9e5a;
+  --color-nature-light: #8fbc7a;
+
+  /* ---- tipografía ---- */
+  --font-script: "Great Vibes", cursive; /* uso limitado: solo "Abi" en el hero */
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --text-display: clamp(3.5rem, 18vw, 6rem);
+  --text-h1: clamp(1.75rem, 7vw, 2.75rem);
+  --text-h2: clamp(1.375rem, 5vw, 1.875rem);
+  --text-h3: clamp(1.125rem, 4vw, 1.375rem);
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-caption: 0.75rem;
+
+  /* ---- espaciado ---- */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+  --space-section: clamp(4rem, 12vh, 8rem);
+
+  /* ---- radios ---- */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-full: 999px;
+
+  /* ---- sombras ---- */
+  --shadow-sm: 0 1px 3px rgba(59, 36, 23, 0.08);
+  --shadow-md: 0 8px 24px rgba(59, 36, 23, 0.12);
+  --shadow-lg: 0 16px 48px rgba(59, 36, 23, 0.16);
+  --shadow-glow-gold: 0 0 32px rgba(201, 111, 62, 0.3);
+}

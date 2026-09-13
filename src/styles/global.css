@@ -1,0 +1,116 @@
+/*
+  Fuentes (revisión pedida por el cliente: "más redondeada y moderna, tipo
+  Google Sans"): Poppins reemplaza a Cormorant Infant como fuente principal
+  del sistema (redondeada, geométrica, moderna). Great Vibes (script) se
+  mantiene SOLO para el nombre "Abi" en el hero — detalle puntual ya
+  aprobado, no contradice el pedido de modernizar el resto.
+  Debe ir antes que cualquier otra regla (@import solo puede ir después de
+  @charset/@layer).
+*/
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap");
+
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme {
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-foreground: var(--color-foreground);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-border: var(--color-border);
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+  --color-nature: var(--color-nature);
+  --color-nature-light: var(--color-nature-light);
+  --color-on-accent: var(--color-on-accent);
+  --color-bg-sage: var(--color-bg-sage);
+  --color-bg-lilac: var(--color-bg-lilac);
+  --color-bg-peach: var(--color-bg-peach);
+
+  --font-script: var(--font-script);
+  --font-sans: var(--font-sans);
+
+  --text-display: var(--text-display);
+  --text-h1: var(--text-h1);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-body-lg: var(--text-body-lg);
+  --text-body: var(--text-body);
+  --text-small: var(--text-small);
+  --text-caption: var(--text-caption);
+
+  --spacing-section: var(--space-section);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-full: var(--radius-full);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-glow-gold: var(--shadow-glow-gold);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* evita el "salto" de scroll-anchoring peleando con Lenis */
+    scroll-behavior: auto;
+    /* Bug real encontrado: `overflow-x: hidden` solo en body NO contiene el
+       desborde de elementos con position:absolute + left/right negativos
+       (ver floatingShapes.ts) — html mide su propio scrollWidth igual, y
+       aparece scroll horizontal. Hace falta en ambos. */
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.15;
+  }
+
+  /* Nunca quitar el foco visible sin reemplazo (regla de accesibilidad). */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Respeta prefers-reduced-motion a nivel global; las animaciones GSAP
+     además se ramifican explícitamente con gsap.matchMedia (ver
+     src/animations/reducedMotion.ts en la Etapa 8). */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .font-script {
+    font-family: var(--font-script);
+  }
+}
