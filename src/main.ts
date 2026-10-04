@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { setupSmoothScroll } from "@/animations/lenisSetup";
 import { setupBackgroundFlow } from "@/animations/backgroundFlow";
+import { setupBackgroundWallpaper } from "@/animations/backgroundWallpaper";
 import { setupFloatingShapes } from "@/animations/floatingShapes";
 
 import { renderHero, GUEST_VALIDATED_EVENT } from "@/sections/hero";
@@ -41,6 +42,7 @@ experience.className = "hidden";
 // default y se desincronizan del smooth-scroll de Lenis.
 const lenis = setupSmoothScroll();
 const backgroundFlow = setupBackgroundFlow();
+const backgroundWallpaper = setupBackgroundWallpaper(backgroundFlow.layer);
 setupFloatingShapes(backgroundFlow.layer);
 
 const heroSection = document.createElement("div");
@@ -80,6 +82,7 @@ function unlockExperience(): void {
     // sección — solo válido una vez que `experience` dejó de tener
     // display:none (mismo motivo que ScrollTrigger.refresh() arriba).
     backgroundFlow.refresh();
+    backgroundWallpaper.refresh();
   });
 }
 
