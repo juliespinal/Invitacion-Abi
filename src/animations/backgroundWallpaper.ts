@@ -7,13 +7,13 @@
  * de todo el contenido, del mismo alto que el documento. Usa
  * `/img/abi/background.jpg` con opacidad 0.4 (el 60/40 pedido se logra por
  * opacidad, no por composición de blend-mode — más simple y más previsible
- * en mobile) y `background-size: auto 100%` (alto fijo al viewport-del-track,
- * ancho libre) para que exista recorrido horizontal real de la imagen.
+ * en mobile) y `background-size: 100% auto` (ancho fijo al viewport,
+ * alto libre) para que exista recorrido vertical real de la imagen.
  *
  * Movimiento: a medida que el usuario scrollea verticalmente de 0% a 100%
- * del documento, `background-position-x` se mueve de 0% a 100% — en el
+ * del documento, `background-position-y` se mueve de 0% a 100% — en el
  * footer (final del scroll vertical) la imagen llega exactamente al extremo
- * derecho de su propio recorrido horizontal, tal como se pidió.
+ * inferior de su propio recorrido vertical, tal como se pidió.
  *
  * Bug real encontrado y corregido: el photobook (ver
  * src/sections/photobook/index.ts) pinea su sección durante ~640% de alto de
@@ -22,7 +22,7 @@
  * pero sí cuenta como avance real de scroll dentro de `document.body`. Atar
  * el wallpaper a un progreso lineal 0→1 de "top top" a "bottom bottom" del
  * documento completo hacía que el álbum por sí solo consumiera la mayor
- * parte del recorrido horizontal 0%→100% (el pin infla el scroll real sin
+ * parte del recorrido vertical 0%→100% (el pin infla el scroll real sin
  * mover nada en pantalla), dejando el wallpaper ya "agotado" (cerca de 100%)
  * apenas el usuario salía del álbum, con muy poco recorrido visible en el
  * resto de la web.
@@ -33,7 +33,7 @@
  * en esa escala — dentro del álbum el wallpaper queda fijo, y el resto del
  * recorrido (antes y después) se reparte proporcionalmente al espacio real
  * que ocupan las demás secciones, sin que el pin (que no mueve nada en
- * pantalla) robe proporción del recorrido horizontal.
+ * pantalla) robe proporción del recorrido vertical.
  *
  * Segundo bug real encontrado: un `ScrollTrigger.create({ trigger:
  * document.body, scrub, onUpdate })` adicional —registrado sobre el mismo
@@ -68,11 +68,11 @@ export function setupBackgroundWallpaper(
   layer.className = "absolute left-0 top-0 right-0 pointer-events-none";
   layer.style.backgroundImage = `url("${base}img/abi/background.jpg")`;
   layer.style.backgroundRepeat = "no-repeat";
-  // Alto fijo al 100% de la capa (alto real del documento), ancho libre —
-  // así la imagen es más ancha que el viewport y existe recorrido horizontal
-  // real para animar vía background-position-x.
-  layer.style.backgroundSize = "auto 100%";
-  layer.style.backgroundPosition = "0% center";
+  // Ancho fijo al 100% de la capa, alto libre —
+  // así la imagen es más alta que el viewport y existe recorrido vertical
+  // real para animar vía background-position-y.
+  layer.style.backgroundSize = "100% auto";
+  layer.style.backgroundPosition = "center 0%";
   layer.style.opacity = "0.4"; // 40% wallpaper / 60% degradé (debajo, visible)
   layer.style.width = "100%";
   layer.style.height = "100%";
@@ -183,7 +183,7 @@ export function setupBackgroundWallpaper(
 
       function update(): void {
         const progress = computeProgress();
-        gsap.set(layer, { backgroundPositionX: `${Math.min(100, Math.max(0, progress * 100))}%` });
+        gsap.set(layer, { backgroundPositionY: `${Math.min(100, Math.max(0, progress * 100))}%` });
         ticking = false;
       }
 
@@ -205,7 +205,7 @@ export function setupBackgroundWallpaper(
     },
     () => {
       // Reduced motion: wallpaper estático, sin desplazamiento.
-      layer.style.backgroundPositionX = "0%";
+      layer.style.backgroundPositionY = "0%";
     },
   );
 
