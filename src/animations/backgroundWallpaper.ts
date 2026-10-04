@@ -7,13 +7,17 @@
  * de todo el contenido, del mismo alto que el documento. Usa
  * `/img/abi/background.jpg` con opacidad 0.4 (el 60/40 pedido se logra por
  * opacidad, no por composición de blend-mode — más simple y más previsible
- * en mobile) y `background-size: 100% auto` (ancho fijo al viewport,
- * alto libre) para que exista recorrido vertical real de la imagen.
+ * en mobile) y `background-size: auto 400vh` (alto fijo a 4 viewports, ancho
+ * libre) para que exista un recorrido vertical real y generoso (300vh de
+ * desplazamiento posible) — con la imagen escalada al ancho del documento
+ * (el bug que se pidió corregir acá) el recorrido vertical quedaba
+ * demasiado corto y el movimiento se sentía abrupto en vez de gradual.
  *
  * Movimiento: a medida que el usuario scrollea verticalmente de 0% a 100%
- * del documento, `background-position-y` se mueve de 0% a 100% — en el
- * footer (final del scroll vertical) la imagen llega exactamente al extremo
- * inferior de su propio recorrido vertical, tal como se pidió.
+ * del documento, `background-position-y` se mueve de 0% a 100% (sobre ese
+ * recorrido de 300vh) — en el footer (final del scroll vertical) la imagen
+ * llega exactamente al extremo inferior de su propio recorrido, y el avance
+ * se siente gradual/continuo en vez de "saltar" de golpe.
  *
  * Bug real encontrado y corregido: el photobook (ver
  * src/sections/photobook/index.ts) pinea su sección durante ~640% de alto de
@@ -68,10 +72,17 @@ export function setupBackgroundWallpaper(
   layer.className = "absolute left-0 top-0 right-0 pointer-events-none";
   layer.style.backgroundImage = `url("${base}img/abi/background.jpg")`;
   layer.style.backgroundRepeat = "no-repeat";
-  // Ancho fijo al 100% de la capa, alto libre —
-  // así la imagen es más alta que el viewport y existe recorrido vertical
-  // real para animar vía background-position-y.
-  layer.style.backgroundSize = "100% auto";
+  // Bug real encontrado (sentido vertical): con "100% auto" el navegador
+  // escala la imagen al ANCHO del layer (el ancho del documento, ~390px en
+  // mobile) y el alto queda atado a esa proporción — como background.jpg es
+  // panorámica (1600x1076), su alto resultante termina siendo de apenas
+  // ~260px, muchísimo menor que el alto del documento. Con tan poco
+  // recorrido vertical disponible, el movimiento se siente abrupto/casi
+  // nulo en vez de "ir scrolleando de a poco".
+  // Fix: fijar el ALTO de la imagen a un múltiplo del viewport (acá 400vh,
+  // ajustable) y dejar el ancho libre — así hay un recorrido vertical real y
+  // generoso para repartir en todo el scroll de la página.
+  layer.style.backgroundSize = "auto 400vh";
   layer.style.backgroundPosition = "center 0%";
   layer.style.opacity = "0.4"; // 40% wallpaper / 60% degradé (debajo, visible)
   layer.style.width = "100%";
